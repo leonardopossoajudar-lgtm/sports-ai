@@ -1,88 +1,61 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Sports AI | Acesso</title>
     <style>
-        :root { --primary: #00ff00; --bg: #0a0a0a; --card: #161616; --text: #ffffff; }
+        :root { --primary: #00ff00; --bg: #000000; --card: #151515; --text: #ffffff; }
         body { background: var(--bg); color: var(--text); font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .box { background: var(--card); padding: 30px; border-radius: 15px; width: 280px; text-align: center; border: 1px solid #333; display: none; }
-        input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 5px; border: 1px solid #444; background: #000; color: #fff; box-sizing: border-box; }
+        .box { background: var(--card); padding: 30px; border-radius: 15px; width: 280px; text-align: center; border: 1px solid #444; display: none; }
+        input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 5px; border: 1px solid #444; background: #222; color: #fff; box-sizing: border-box; }
         button { width: 100%; padding: 12px; margin-top: 10px; background: var(--primary); border: none; border-radius: 5px; font-weight: bold; cursor: pointer; color: #000; }
-        .links { margin-top: 15px; font-size: 12px; color: #888; cursor: pointer; text-decoration: underline; }
-        #telaLogin { display: block; }
+        .links { margin-top: 10px; font-size: 12px; color: #888; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <!-- TELA LOGIN -->
-<div id="telaLogin" class="box">
+<div id="telaLogin" class="box" style="display: block;">
     <h2>LOGIN</h2>
-    <input type="email" id="emailL" placeholder="E-mail">
-    <input type="password" id="senhaL" placeholder="Senha">
-    <button id="btnEntrar">ENTRAR</button>
-    <div class="links">
-        <p onclick="recuperar()">Esqueceu a senha?</p>
-        <p onclick="trocar('telaCadastro')">Não tem conta? Cadastre-se</p>
-    </div>
+    <input type="email" id="email" placeholder="E-mail">
+    <input type="password" id="senha" placeholder="Senha">
+    <button onclick="logar()">ENTRAR</button>
+    <p class="links" onclick="trocar('telaCadastro')">Não tem conta? Cadastre-se</p>
 </div>
 
 <!-- TELA CADASTRO -->
 <div id="telaCadastro" class="box">
     <h2>CADASTRO</h2>
-    <input type="text" id="nomeC" placeholder="Nome Completo">
-    <input type="text" id="cpfC" placeholder="CPF">
-    <input type="date" id="nascC">
+    <input type="text" id="nome" placeholder="Nome Completo">
     <input type="email" id="emailC" placeholder="E-mail">
     <input type="password" id="senhaC" placeholder="Senha">
-    <button id="btnCadastrar">CRIAR CONTA</button>
-    <div class="links"><p onclick="trocar('telaLogin')">Já tem conta? Voltar</p></div>
+    <button onclick="cadastrar()">CADASTRAR</button>
+    <p class="links" onclick="trocar('telaLogin')">Já tem conta? Voltar</p>
 </div>
 
 <!-- TELA PAINEL -->
 <div id="telaPainel" class="box">
-    <h1>Bem-vindo!</h1>
+    <h2>Bem-vindo!</h2>
     <p>Acesso validado.</p>
     <button onclick="location.reload()">SAIR</button>
 </div>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
-  import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+<script>
+    function trocar(tela) {
+        document.getElementById('telaLogin').style.display = 'none';
+        document.getElementById('telaCadastro').style.display = 'none';
+        document.getElementById('telaPainel').style.display = 'none';
+        document.getElementById(tela).style.display = 'block';
+    }
+    
+    function logar() {
+        // Lógica de autenticação aqui
+        trocar('telaPainel');
+    }
 
-  const app = initializeApp({
-    apiKey: "AIzaSyBPm6EK0jJiQxbH4eveAFKoh84XeuSm7fY",
-    authDomain: "sports-ai-560fa.firebaseapp.com",
-    projectId: "sports-ai-560fa",
-    storageBucket: "sports-ai-560fa.firebasestorage.app",
-    messagingSenderId: "868930491870",
-    appId: "1:868930491870:web:a3af2fca273abc389a794f"
-  });
-  const auth = getAuth(app);
-
-  window.trocar = (id) => {
-    document.querySelectorAll('.box').forEach(b => b.style.display = 'none');
-    document.getElementById(id).style.display = 'block';
-  };
-
-  document.getElementById("btnEntrar").addEventListener("click", () => {
-    signInWithEmailAndPassword(auth, document.getElementById("emailL").value, document.getElementById("senhaL").value)
-      .then(() => trocar('telaPainel')).catch(e => alert(e.message));
-  });
-
-  document.getElementById("btnCadastrar").addEventListener("click", () => {
-    const idade = new Date().getFullYear() - new Date(document.getElementById("nascC").value).getFullYear();
-    if (idade < 18) return alert("Apenas maiores de 18 anos.");
-    createUserWithEmailAndPassword(auth, document.getElementById("emailC").value, document.getElementById("senhaC").value)
-      .then(() => trocar('telaPainel')).catch(e => alert(e.message));
-  });
-
-  window.recuperar = () => {
-    const email = document.getElementById("emailL").value;
-    if(!email) return alert("Digite o e-mail no login primeiro.");
-    sendPasswordResetEmail(auth, email).then(() => alert("E-mail enviado!"));
-  };
+    function cadastrar() {
+        // Lógica de cadastro aqui
+        trocar('telaLogin');
+    }
 </script>
 </body>
 </html>
-e
